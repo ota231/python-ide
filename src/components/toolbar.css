@@ -1,0 +1,13 @@
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    gap: 2rem;
+    flex-wrap: wrap; 
+  }
+  
+.toolbar > div {
+display: flex;
+gap: 0.5rem; /* space between buttons within a group */
+}

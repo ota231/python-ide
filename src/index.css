@@ -1,0 +1,23 @@
+.app{
+  display: grid;
+  grid-template-rows: auto 1fr auto; /* Toolbar, Editor, Terminal */
+  overflow: scroll;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto; 
+  margin-top: 2%;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #eee;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #ddd;
+}
