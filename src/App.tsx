@@ -3,7 +3,7 @@ import { Toolbar } from "./components/Toolbar";
 import { MonacoEditor } from "./components/Editor";
 import { TerminalSection } from "./components/TerminalSection";
 import { FilePane } from "./components/FilePane";
-import { PythonRunner } from './hooks/pythonRunner';
+import { PythonRunner } from './hooks/PythonRunner';
 import './index.css';
 
 const DEFAULT_CODE = `# sample code  
