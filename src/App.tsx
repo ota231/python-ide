@@ -6,8 +6,7 @@ import { FilePane } from "./components/FilePane";
 import { PythonRunner } from './hooks/pythonRunner';
 import './index.css';
 
-const DEFAULT_CODE = `
-# sample code  
+const DEFAULT_CODE = `# sample code  
 
 import numpy as np
 from Bio.Seq import Seq

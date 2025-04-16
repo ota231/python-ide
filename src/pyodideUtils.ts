@@ -9,7 +9,6 @@ let pyodide: PyodideInterface | null = null;
 export async function loadPyodideAndPackages(): Promise<PyodideInterface> {
   if (pyodide) return pyodide;
 
-  console.log('[Pyodide] Loading runtime...');
   pyodide = await loadPyodide({
     indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.27.5/full/',
   });
