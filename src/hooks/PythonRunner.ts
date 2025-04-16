@@ -54,7 +54,7 @@ export function PythonRunner() {
     let stdoutBuffer = '';
     let stderrBuffer = '';
 
-    // capture print output from user
+    // capture print output from user, especially new lines
     pyodide.setStdout({
       batched: (text: string) => {
         stdoutBuffer += text.endsWith('\n') ? text : text + '\n';
