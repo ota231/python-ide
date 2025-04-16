@@ -6,7 +6,7 @@ type RunResult = { output: string; error: string };
 // Complete Pyodide type declaration
 declare global {
   interface Window {
-    loadPyodide: (options: { 
+    loadPyodide: (options: {
       indexURL: string;
       stdout?: (text: string) => void;
       stderr?: (text: string) => void;
@@ -38,8 +38,8 @@ export function PythonRunner() {
       } catch (error) {
         console.error('Pyodide load error:', error);
         setStatus('error');
-        setResult({ 
-          output: '', 
+        setResult({
+          output: '',
           error: error instanceof Error ? error.message : 'Failed to load Pyodide'
         });
       }
@@ -50,35 +50,39 @@ export function PythonRunner() {
 
   const runPython = async (code: string) => {
     if (!pyodide || status !== 'ready') return;
-    
-    setResult({ output: 'Running...', error: '' });
-    
-    try {
-      let output = '';
-      
-      // Set up custom output handlers
-      const stdoutHandler = { batched: (text: string) => output += text };
-      const stderrHandler = { batched: (text: string) => output += `ERROR: ${text}` };
-      
-      pyodide.setStdout(stdoutHandler);
-      pyodide.setStderr(stderrHandler);
 
-      // Execute the code
-      const returnValue = await pyodide.runPythonAsync(code);
-      
-      // Reset to default handlers
+    let stdoutBuffer = '';
+    let stderrBuffer = '';
+
+    // capture print output from user
+    pyodide.setStdout({
+      batched: (text: string) => {
+        stdoutBuffer += text.endsWith('\n') ? text : text + '\n';
+      }
+    });
+    pyodide.setStderr({
+      batched: (text: string) => {
+        stderrBuffer += text.endsWith('\n') ? `ERROR: ${text}` : `ERROR: ${text}\n`;
+      }
+    });
+
+    setResult({ output: 'Running...', error: '' });
+
+    try {
+
+      await pyodide.runPythonAsync(code);
+
+      const finalOutput = stdoutBuffer;
+      console.log('Final Output:', finalOutput);
+
+      // reset to default handlers
       pyodide.setStdout({ batched: (text) => console.log(text) });
       pyodide.setStderr({ batched: (text) => console.error(text) });
 
-      // Include return value if exists
-      if (returnValue !== undefined) {
-        output += `\nReturn value: ${String(returnValue)}`;
-      }
-
-      setResult({ output: output.trim(), error: '' });
+      setResult({ output: finalOutput, error: stderrBuffer.trim() });
     } catch (error) {
-      setResult({ 
-        output: '', 
+      setResult({
+        output: '',
         error: error instanceof Error ? error.message : 'Python execution failed'
       });
     }
