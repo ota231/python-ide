@@ -43,7 +43,7 @@ export default function App() {
 
   return (
     <div className="app d-flex flex-column vh-100">
-      <div className="bg-light border-bottom">
+      <div className="bg-light border">
         <Toolbar 
           onRun={handleRun} 
           onReset={handleReset} 

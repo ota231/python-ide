@@ -54,7 +54,7 @@ export function Toolbar({ onRun, onReset, onClear, onCopy, onToggleTheme, theme 
           )}
         </button>
 
-        <button className="btn btn-outline-dark" title="Change Layout">
+        <button className="btn btn-outline-primary" title="Change Layout">
           <i className="bi bi-arrows-angle-expand"></i> Fullscreen
         </button>
       </div>
