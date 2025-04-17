@@ -38,6 +38,18 @@ export function CodeOutput({ output, error, isLoading, theme }: CodeOutputProps)
         }
     }, []);
 
+    // update terminal on theme change
+    useEffect(() => {
+        if (!xtermRef.current) return;
+
+        xtermRef.current.options.theme = {
+            background: theme === 'dark' ? '#1e1e1e' : '#ffffff',
+            foreground: theme === 'dark' ? '#f5f5f5' : '#1e1e1e',
+          };
+          xtermRef.current.refresh(0, xtermRef.current.rows - 1);
+          
+    }, [theme]);
+
     //handle updates to the outpur/error/loading
     useEffect(() => {
         if (!xtermRef.current) return;

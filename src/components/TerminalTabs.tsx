@@ -1,15 +1,17 @@
 import { useState } from 'react';
+import './terminal-tabs.css';
 
 type TerminalTabsProps = {
   outputLines: string[];
   plotUrl?: string;
+  theme: 'light' | 'dark';
 };
 
-export function TerminalTabs({ plotUrl }: TerminalTabsProps) {
+export function TerminalTabs({ plotUrl, theme }: TerminalTabsProps) {
   const [activeTab, setActiveTab] = useState<'code' | 'plot'>('code');
 
   return (
-    <div className="terminal-tabs">
+    <div className={`terminal-tabs ${theme}`}>
       <div className="tab-buttons">
         <button
           className={activeTab === 'code' ? 'active' : ''}
@@ -25,6 +27,7 @@ export function TerminalTabs({ plotUrl }: TerminalTabsProps) {
           Image Output
         </button>
       </div>
+
     </div>
   );
 }

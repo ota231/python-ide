@@ -1,0 +1,31 @@
+.tab-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tab-buttons button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.tab-buttons :hover {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.terminal-tabs.light .tab-buttons button {
+  color: #222;
+}
+
+.terminal-tabs.dark .tab-buttons button {
+  color: #eee;
+}
+
+.terminal-tabs.light .tab-buttons button.active {
+  background-color: #e0e0e0;
+}
+
+.terminal-tabs.dark .tab-buttons button.active {
+  background-color: #444;
+}
