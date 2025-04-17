@@ -6,26 +6,32 @@ interface CodeOutputProps {
     output: string;
     error: string;
     isLoading: boolean;
+    theme: 'light' | 'dark';
 }
 
-export function CodeOutput({ output, error, isLoading }: CodeOutputProps) {
+export function CodeOutput({ output, error, isLoading, theme }: CodeOutputProps) {
     const terminalRef = useRef<HTMLDivElement>(null);
     const xtermRef = useRef<Terminal | null>(null);
     const didInitRef = useRef(false);
 
+    //initialize terminal once
     useEffect(() => {
         if (!terminalRef.current) return;
 
-        // Initialize terminal if it hasn't already
         if (!xtermRef.current) {
             xtermRef.current = new Terminal({
                 cursorBlink: true,
                 convertEol: true,
                 fontSize: 14,
-                theme: {
-                    foreground: '#1e1e1e',
-                    background: '#ffffff',
-                },
+                theme: theme === 'dark'
+                    ? {
+                        background: '#1e1e1e',
+                        foreground: '#f5f5f5',
+                    }
+                    : {
+                        background: '#ffffff',
+                        foreground: '#1e1e1e',
+                    },
             });
             xtermRef.current.open(terminalRef.current);
             didInitRef.current = true;

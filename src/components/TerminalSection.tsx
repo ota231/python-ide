@@ -5,13 +5,14 @@ interface TerminalSectionProps {
   output: string;
   error: string;
   isRunning: boolean;
+  theme: 'light' | 'dark';
 }
 
-export function TerminalSection({ output, error, isRunning }: TerminalSectionProps) {
+export function TerminalSection({ output, error, isRunning, theme }: TerminalSectionProps) {
   return (
     <div className="terminal-section d-flex flex-column h-100">
       <TerminalTabs outputLines={output.split('\n').filter(Boolean)} />
-      <CodeOutput output={output} error={error} isLoading={isRunning} />
+      <CodeOutput output={output} error={error} isLoading={isRunning}  theme={theme}/>
     </div>
   );
 }

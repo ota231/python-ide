@@ -20,11 +20,26 @@ print(my_seq)`;
 
 export default function App() {
   const [code, setCode] = useState(DEFAULT_CODE);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const { runPython, result, status } = PythonRunner();
 
   const handleRun = () => runPython(code);
   const handleReset = () => setCode(DEFAULT_CODE);
   const handleClear = () => setCode('');
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code)
+      .then(() => {
+        console.log("Code copied to clipboard!");
+      })
+      .catch((err) => {
+        console.error("Failed to copy code:", err);
+      });
+  };
+  const handleThemeChange = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    document.body.classList.toggle('dark-theme', newTheme === 'dark');
+  };
 
   return (
     <div className="app d-flex flex-column vh-100">
@@ -33,6 +48,9 @@ export default function App() {
           onRun={handleRun} 
           onReset={handleReset} 
           onClear={handleClear} 
+          onCopy={handleCopy}
+          onToggleTheme={handleThemeChange}
+          theme={theme}
         />
       </div>
 
@@ -52,6 +70,7 @@ export default function App() {
             <MonacoEditor 
               code={code} 
               onChange={(newCode) => setCode(newCode || '')} 
+              theme={theme}
             />
           </div>
         </div>
@@ -69,6 +88,7 @@ export default function App() {
             output={result.output} 
             error={result.error} 
             isRunning={status === 'loading'} 
+            theme={theme}
           />
         </div>
       </div>
