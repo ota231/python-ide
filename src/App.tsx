@@ -22,6 +22,11 @@ export default function App() {
   const [code, setCode] = useState(DEFAULT_CODE);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const { runPython, result, status } = PythonRunner();
+  const [activeMode, setActiveMode] = useState<'output' | 'terminal'>('output');
+
+  const toggleMode = () => {
+    setActiveMode(prev => prev === 'output' ? 'terminal' : 'output');
+  };
 
   const handleRun = () => runPython(code);
   const handleReset = () => setCode(DEFAULT_CODE);
@@ -89,6 +94,8 @@ export default function App() {
             error={result.error} 
             isRunning={status === 'loading'} 
             theme={theme}
+            activeMode={activeMode}
+            onToggleMode={toggleMode}
           />
         </div>
       </div>
