@@ -1,3 +1,4 @@
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import './toolbar.css';
 
 interface ToolbarProps {
@@ -9,67 +10,72 @@ interface ToolbarProps {
   theme?: 'light' | 'dark';
 }
 
-export function Toolbar({ onRun, onReset, onClear, onCopy, onToggleTheme, theme }: ToolbarProps) {
+export function Toolbar({ onRun, onReset, onClear, onCopy, onToggleTheme, theme = 'light' }: ToolbarProps) {
+  const buttonClass = `btn btn-sm ${theme === 'dark' ? 'btn-outline-light' : 'btn-outline-dark'} mx-1`;
+  const buttonStyle = { width: '36px', height: '36px' };
+
   return (
     <div className={`toolbar d-flex flex-wrap align-items-center gap-2 p-2 toolbar-${theme}`}>
-
       {/* Execution Group */}
       <div className="execution btn-group btn-group-sm">
-        <button className="btn btn-success" onClick={onRun}>
-          <i className="bi bi-play-fill me-1"></i> Run
-        </button>
-        <button className="btn btn-outline-danger" onClick={() => { }}>
-          <i className="bi bi-stop-fill me-1"></i> Stop
-        </button>
-        <button className="btn btn-outline-secondary" onClick={onReset}>
-          <i className="bi bi-arrow-repeat me-1"></i> Reset to default
-        </button>
+        <OverlayTrigger placement="bottom" overlay={<Tooltip>Run</Tooltip>}>
+          <button className={`${buttonClass} btn-outline-success`} onClick={onRun} style={buttonStyle}>
+            <i className="bi bi-play-fill"></i>
+          </button>
+        </OverlayTrigger>
+        <OverlayTrigger placement="bottom" overlay={<Tooltip>Stop</Tooltip>}>
+          <button className={buttonClass} onClick={() => {}} style={buttonStyle}>
+            <i className="bi bi-stop-fill"></i>
+          </button>
+        </OverlayTrigger>
+        <OverlayTrigger placement="bottom" overlay={<Tooltip>Reset To Default Code</Tooltip>}>
+          <button className={buttonClass} onClick={onReset} style={buttonStyle}>
+            <i className="bi bi-arrow-repeat"></i>
+          </button>
+        </OverlayTrigger>
       </div>
 
       {/* Editor Group */}
       <div className="editor btn-group btn-group-sm">
-        <button className="btn btn-outline-primary" title="Copy" onClick={onCopy}>
-          <i className="bi bi-clipboard"></i> Copy Code
-        </button>
-        <button className="btn btn-outline-danger" title="Clear" onClick={onClear}>
-          <i className="bi bi-eraser-fill"></i> Clear Code
-        </button>
+        <OverlayTrigger placement="bottom" overlay={<Tooltip>Copy Code</Tooltip>}>
+          <button className={buttonClass} onClick={onCopy} style={buttonStyle}>
+            <i className="bi bi-clipboard"></i>
+          </button>
+        </OverlayTrigger>
+        <OverlayTrigger placement="bottom" overlay={<Tooltip>Clear Code</Tooltip>}>
+          <button className={buttonClass} onClick={onClear} style={buttonStyle}>
+            <i className="bi bi-eraser-fill"></i>
+          </button>
+        </OverlayTrigger>
       </div>
 
       {/* View Group */}
       <div className="view btn-group btn-group-sm">
-        <button
-          className={`btn ${theme === 'dark' ? 'btn-outline-light' : 'btn-outline-dark'}`}
-          title="Toggle Theme"
-          onClick={onToggleTheme}
-        >
-          {theme === 'dark' ? (
-            <>
-              <i className="bi bi-sun-fill"></i> Light Mode
-            </>
-          ) : (
-            <>
-              <i className="bi bi-moon-stars-fill"></i> Dark Mode
-            </>
-          )}
-        </button>
-
-        <button className="btn btn-outline-primary" title="Change Layout">
-          <i className="bi bi-arrows-angle-expand"></i> Fullscreen
-        </button>
+        <OverlayTrigger placement="bottom" overlay={<Tooltip>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</Tooltip>}>
+          <button className={buttonClass} onClick={onToggleTheme} style={buttonStyle}>
+            <i className={`bi ${theme === 'dark' ? 'bi-sun-fill' : 'bi-moon-stars-fill'}`}></i>
+          </button>
+        </OverlayTrigger>
+        <OverlayTrigger placement="bottom" overlay={<Tooltip>Fullscreen</Tooltip>}>
+          <button className={buttonClass} onClick={() => {}} style={buttonStyle}>
+            <i className="bi bi-arrows-angle-expand"></i>
+          </button>
+        </OverlayTrigger>
       </div>
 
       {/* Save/Share Group */}
       <div className="save-share btn-group btn-group-sm">
-        <button className="btn btn-outline-success">
-          <i className="bi bi-file-earmark-arrow-up me-1"></i> Export File
-        </button>
-        <button className="btn btn-outline-info">
-          <i className="bi bi-file-earmark-arrow-down me-1"></i> Import File
-        </button>
+        <OverlayTrigger placement="bottom" overlay={<Tooltip>Export File</Tooltip>}>
+          <button className={buttonClass} onClick={() => {}} style={buttonStyle}>
+            <i className="bi bi-file-earmark-arrow-up"></i>
+          </button>
+        </OverlayTrigger>
+        <OverlayTrigger placement="bottom" overlay={<Tooltip>Import File</Tooltip>}>
+          <button className={buttonClass} onClick={() => {}} style={buttonStyle}>
+            <i className="bi bi-file-earmark-arrow-down"></i>
+          </button>
+        </OverlayTrigger>
       </div>
-
     </div>
   );
 }
-
