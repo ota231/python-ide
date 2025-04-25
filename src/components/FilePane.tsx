@@ -1,66 +1,54 @@
-import { useState } from 'react';
+import { ChangeEvent } from 'react';
 import { FileItem, FileLanguage } from '../types/file';
 
 interface FilePaneProps {
-  allFiles: FileItem[];
   openFiles: FileItem[];
   setOpenFiles: (files: FileItem[]) => void;
-  setAllFiles: (files: FileItem[]) => void;
   activeFileId: string;
   setActiveFileId: (id: string) => void;
+  theme: 'light' | 'dark';
 }
 
 export function FilePane({
-  allFiles,
   openFiles,
   setOpenFiles,
-  setAllFiles,
   activeFileId,
-  setActiveFileId
+  setActiveFileId,
+  theme
 }: FilePaneProps) {
-  const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({
-    '3': true // default open folder
-  });
-
-  const toggleFolder = (folderId: string) => {
-    setOpenFolders(prev => ({
-      ...prev,
-      [folderId]: !prev[folderId]
-    }));
-  };
-
   const getFileLanguage = (filename: string): FileLanguage => {
     const extension = filename.split('.').pop()?.toLowerCase();
     switch (extension) {
-      case 'py':
-        return 'python';
-      case 'csv':
-        return 'csv';
-      default:
-        return 'text';
+      case 'py': return 'python';
+      case 'csv': return 'csv';
+      default: return 'text';
     }
   };
-  
 
-  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const content = event.target?.result as string;
-        const newFile: FileItem = {
-          id: Date.now().toString(),
-          name: file.name,
-          type: 'file',
-          language: getFileLanguage(file.name),
-          content
+  const handleImport = async (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    const processFile = (file: File): Promise<FileItem> => {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          resolve({
+            id: Date.now().toString() + Math.random().toString(36).substring(2),
+            name: file.name,
+            type: 'file',
+            language: getFileLanguage(file.name),
+            content: event.target?.result as string
+          });
         };
-        
-        setAllFiles([...allFiles, newFile]);
-        setOpenFiles([...openFiles, newFile]);
-        setActiveFileId(newFile.id);
-      };
-      reader.readAsText(file);
+        reader.readAsText(file);
+      });
+    };
+
+    const newFiles = await Promise.all(Array.from(files).map(processFile));
+    setOpenFiles([...openFiles, ...newFiles]);
+    if (newFiles.length > 0) {
+      setActiveFileId(newFiles[0].id);
     }
   };
 
@@ -78,77 +66,64 @@ export function FilePane({
     URL.revokeObjectURL(url);
   };
 
-  const openFile = (file: FileItem) => {
-    if (file.type === 'folder') {
-      toggleFolder(file.id);
-      return;
-    }
-
-    if (!openFiles.some(f => f.id === file.id)) {
-      setOpenFiles([...openFiles, file]);
-    }
-    setActiveFileId(file.id);
-  };
-
-  const createNewFile = () => {
-    const newFile: FileItem = {
-      id: Date.now().toString(),
-      name: `script_${allFiles.length + 1}.py`,
-      type: 'file',
-      language: 'python',
-      content: ''
-    };
-    
-    setAllFiles([...allFiles, newFile]);
-    setOpenFiles([...openFiles, newFile]);
-    setActiveFileId(newFile.id);
-  };
-
   const closeFile = (fileId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    
     const newOpenFiles = openFiles.filter(f => f.id !== fileId);
-    if (newOpenFiles.length === 0) return; // Must keep at least one file open
-    
+    if (newOpenFiles.length === 0) return;
     setOpenFiles(newOpenFiles);
-    
     if (activeFileId === fileId) {
       setActiveFileId(newOpenFiles[0].id);
     }
   };
 
+  const bgColor = theme === 'dark' ? 'bg-dark' : 'bg-light';
+  const textColor = theme === 'dark' ? 'text-white' : 'text-dark';
+  const borderColor = theme === 'dark' ? 'border-secondary' : 'border-light';
+  const buttonVariant = theme === 'dark' ? 'outline-light' : 'outline-dark';
+
   return (
-    <div className="file-pane h-100 p-2" style={{ width: '220px' }}>
-      <div className="d-flex justify-content-between align-items-center mb-3 pb-2">
-        <h6 className="m-0">FILES</h6>
+    <div className={`file-pane h-100 p-2 ${bgColor} ${textColor}`} style={{ width: '220px' }}>
+      <div className={`d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom ${borderColor}`}>
+        <h6 className="m-0">OPEN FILES</h6>
         <div>
-          <label className="btn btn-sm btn-outline me-1" title="Import File">
+          <label className={`btn btn-sm btn-${buttonVariant} me-1`} title="Import File">
             <i className="bi bi-file-earmark-arrow-down"></i>
             <input 
-              type="file" 
+              type="file"
               onChange={handleImport}
               style={{ display: 'none' }}
-              accept=".py,.txt"
+              accept=".py,.txt,.csv"
+              multiple
+              /* @ts-expect-error - webkitdirectory is non-standard but supported */
+              webkitdirectory=""
             />
           </label>
           <button 
-            className="btn btn-sm btn-outline"
+            className={`btn btn-sm btn-${buttonVariant}`}
             title="New File"
-            onClick={createNewFile}
+            onClick={() => {
+              const newFile: FileItem = {
+                id: Date.now().toString(),
+                name: `script_${openFiles.length + 1}.py`,
+                type: 'file',
+                language: 'python',
+                content: ''
+              };
+              setOpenFiles([...openFiles, newFile]);
+              setActiveFileId(newFile.id);
+            }}
           >
             <i className="bi bi-plus-lg"></i>
           </button>
         </div>
       </div>
 
-      {/* Open Files Section */}
-      <div className="mb-3">
-        <small className="text-muted">OPEN FILES</small>
+      <div className="file-list overflow-auto" style={{ height: 'calc(100% - 50px)' }}>
         {openFiles.map(file => (
           <div 
             key={file.id}
             className={`file-item d-flex align-items-center justify-content-between px-2 py-1 ${
-              activeFileId === file.id ? 'bg-primary text-white' : ''
+              activeFileId === file.id ? (theme === 'dark' ? 'bg-primary' : 'bg-info') : ''
             }`}
             onClick={() => setActiveFileId(file.id)}
             style={{ cursor: 'pointer' }}
@@ -159,15 +134,18 @@ export function FilePane({
             </div>
             <div>
               <button 
-                className="btn btn-sm btn-link p-0 text-white"
-                onClick={(e) => handleExport(file)}
+                className={`btn btn-sm btn-link p-0 ${textColor}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleExport(file);
+                }}
                 title="Export file"
               >
                 <i className="bi bi-download"></i>
               </button>
               {openFiles.length > 1 && (
                 <button 
-                  className="btn btn-sm btn-link p-0 text-white"
+                  className={`btn btn-sm btn-link p-0 ${textColor}`}
                   onClick={(e) => closeFile(file.id, e)}
                   title="Close file"
                 >
@@ -175,45 +153,6 @@ export function FilePane({
                 </button>
               )}
             </div>
-          </div>
-        ))}
-      </div>
-
-      {/* All Files Section */}
-      <div className="file-list overflow-auto" style={{ height: 'calc(50% - 50px)' }}>
-        <small className="text-muted">PROJECT FILES</small>
-        {allFiles.map(file => (
-          <div key={file.id}>
-            <div 
-              className={`file-item d-flex align-items-center px-2 py-1 ${
-                file.type === 'folder' ? 'folder' : ''
-              }`}
-              onClick={() => openFile(file)}
-              style={{ cursor: 'pointer' }}
-            >
-              <i className={`bi ${
-                file.type === 'folder' 
-                  ? (openFolders[file.id] ? 'bi-folder2-open' : 'bi-folder') 
-                  : 'bi-file-earmark-code'
-              } me-2`}></i>
-              <span className="text-truncate">{file.name}</span>
-            </div>
-
-            {file.type === 'folder' && openFolders[file.id] && file.children && (
-              <div className="ms-3">
-                {file.children.map(child => (
-                  <div 
-                    key={child.id}
-                    className="file-item d-flex align-items-center px-2 py-1 ms-2"
-                    onClick={() => openFile(child)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <i className="bi bi-file-earmark-code me-2"></i>
-                    <span>{child.name}</span>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         ))}
       </div>
