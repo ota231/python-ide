@@ -4,6 +4,7 @@ import { AceCodeEditor } from "./components/Editor";
 import { TerminalSection } from "./components/TerminalSection";
 import { FilePane } from "./components/FilePane";
 import { PythonRunner } from './hooks/PythonRunner';
+import { FileItem } from './types/file';
 import './index.css';
 
 const DEFAULT_CODE = `# sample code  
@@ -19,20 +20,86 @@ my_seq = Seq("AGTACACTGGT")
 print(my_seq)`;
 
 export default function App() {
-  const [code, setCode] = useState(DEFAULT_CODE);
+  // File system state
+  const [allFiles, setAllFiles] = useState<FileItem[]>([
+    { 
+      id: '1', 
+      name: 'main.py', 
+      type: 'file',
+      language: 'python',
+      content: DEFAULT_CODE
+    },
+    { 
+      id: '2', 
+      name: 'utils.py', 
+      type: 'file',
+      language: 'python',
+      content: '# Utility functions\n'
+    },
+    { 
+      id: '3', 
+      name: 'examples', 
+      type: 'folder',
+      children: [
+        { 
+          id: '4', 
+          name: 'hello.py', 
+          type: 'file',
+          language: 'python',
+          content: 'print("Hello World!")'
+        }
+      ]
+    }
+  ]);
+
+  // Open files and active file state
+  const [openFiles, setOpenFiles] = useState<FileItem[]>([
+    allFiles.find(f => f.id === '1')!
+  ]);
+  const [activeFileId, setActiveFileId] = useState('1');
+
+  // Other existing state
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const { runPython, result, status } = PythonRunner();
   const [activeMode, setActiveMode] = useState<'output' | 'terminal'>('output');
 
+  // Get active file
+  const activeFile = openFiles.find(f => f.id === activeFileId) || openFiles[0];
+
+  // Update file content when editor changes
+  const handleCodeChange = (newCode: string) => {
+    setAllFiles(allFiles.map(f => 
+      f.id === activeFileId ? { ...f, content: newCode } : f
+    ));
+    setOpenFiles(openFiles.map(f => 
+      f.id === activeFileId ? { ...f, content: newCode } : f
+    ));
+  };
+
+  // Existing handlers
   const toggleMode = () => {
     setActiveMode(prev => prev === 'output' ? 'terminal' : 'output');
   };
 
-  const handleRun = () => runPython(code);
-  const handleReset = () => setCode(DEFAULT_CODE);
-  const handleClear = () => setCode('');
+  const handleRun = () => {
+    if (activeFile?.content) {
+      runPython(activeFile.content);
+    }
+  };
+
+  const handleReset = () => {
+    const defaultFile = allFiles.find(f => f.id === '1');
+    if (defaultFile) {
+      handleCodeChange(DEFAULT_CODE);
+    }
+  };
+
+  const handleClear = () => {
+    handleCodeChange('');
+  };
+
   const handleCopy = () => {
-    navigator.clipboard.writeText(code)
+    navigator.clipboard.writeText(activeFile?.content || '')
       .then(() => {
         console.log("Code copied to clipboard!");
       })
@@ -40,6 +107,7 @@ export default function App() {
         console.error("Failed to copy code:", err);
       });
   };
+
   const handleThemeChange = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
@@ -60,7 +128,40 @@ export default function App() {
       </div>
 
       <div className="d-flex flex-column flex-grow-1 overflow-hidden">
-        <div className="d-flex flex-grow-1 overflow-hidden" style={{ marginTop: '10px' }}>
+        {/* Tabs */}
+        <div className="d-flex border-bottom bg-light">
+          {openFiles.map(file => (
+            <div 
+              key={file.id}
+              className={`tab-item px-3 py-2 ${
+                activeFileId === file.id ? 'active bg-white' : ''
+              }`}
+              onClick={() => setActiveFileId(file.id)}
+              style={{ 
+                cursor: 'pointer',
+                borderRight: '1px solid #dee2e6'
+              }}
+            >
+              {file.name}
+              {openFiles.length > 1 && (
+                <button 
+                  className="ms-2 btn-close"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const newOpenFiles = openFiles.filter(f => f.id !== file.id);
+                    setOpenFiles(newOpenFiles);
+                    if (activeFileId === file.id) {
+                      setActiveFileId(newOpenFiles[0].id);
+                    }
+                  }}
+                  style={{ fontSize: '10px' }}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="d-flex flex-grow-1 overflow-hidden">
           <div 
             className="h-100 overflow-auto border"
             style={{ 
@@ -68,14 +169,22 @@ export default function App() {
               minWidth: '250px',
             }}
           >
-            <FilePane onFileSelect={() => {}} />
+            <FilePane 
+              allFiles={allFiles}
+              openFiles={openFiles}
+              setOpenFiles={setOpenFiles}
+              setAllFiles={setAllFiles}
+              activeFileId={activeFileId}
+              setActiveFileId={setActiveFileId}
+            />
           </div>
 
           <div className="flex-grow-1 h-100 overflow-hidden">
             <AceCodeEditor 
-              code={code} 
-              onChange={(newCode) => setCode(newCode || '')} 
+              code={activeFile?.content || ''} 
+              onChange={handleCodeChange} 
               theme={theme}
+              language={activeFile?.language}
             />
           </div>
         </div>

@@ -1,5 +1,7 @@
 import AceEditor from "react-ace";
 import { useState } from 'react';
+
+import { FileLanguage } from "../types/file";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/theme-github";
 import "ace-builds/src-noconflict/theme-monokai";
@@ -11,9 +13,10 @@ interface EditorProps {
   code: string;
   onChange?: (code: string) => void;
   theme: 'light' | 'dark';
+  language?: FileLanguage;
 }
 
-export function AceCodeEditor({ code, onChange, theme }: EditorProps) {
+export function AceCodeEditor({ code, onChange, theme, language }: EditorProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [fontSize, setFontSize] = useState(14);
 
@@ -56,7 +59,7 @@ export function AceCodeEditor({ code, onChange, theme }: EditorProps) {
         </button>
       </div>
       <AceEditor
-        mode="python"
+        mode={language}
         theme={theme === 'dark' ? 'monokai' : 'github'}
         value={code}
         onChange={onChange}
