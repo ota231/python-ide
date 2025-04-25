@@ -129,22 +129,24 @@ export default function App() {
 
       <div className="d-flex flex-column flex-grow-1 overflow-hidden">
         {/* Tabs */}
-        <div className="d-flex border-bottom bg-light">
+        <div className={`d-flex border-bottom ${theme === 'dark' ? 'bg-dark border-secondary' : 'bg-light border-light'}`}>
           {openFiles.map(file => (
             <div
               key={file.id}
-              className={`tab-item px-3 py-2 ${activeFileId === file.id ? 'active bg-white' : ''
+              className={`tab-item px-3 py-2 ${activeFileId === file.id
+                  ? (theme === 'dark' ? 'bg-dark text-white border-top border-primary' : 'bg-white text-dark')
+                  : (theme === 'dark' ? 'text-white-50' : 'text-muted')
                 }`}
               onClick={() => setActiveFileId(file.id)}
               style={{
                 cursor: 'pointer',
-                borderRight: '1px solid #dee2e6'
+                borderRight: `1px solid ${theme === 'dark' ? '#495057' : '#dee2e6'}`
               }}
             >
               {file.name}
               {openFiles.length > 1 && (
                 <button
-                  className="ms-2 btn-close"
+                  className={`ms-2 btn-close ${theme === 'dark' ? 'btn-close-white' : ''}`}
                   onClick={(e) => {
                     e.stopPropagation();
                     const newOpenFiles = openFiles.filter(f => f.id !== file.id);
