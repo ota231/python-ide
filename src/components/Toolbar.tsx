@@ -48,23 +48,14 @@ export function Toolbar({ onRun, onReset, onClear, onCopy, onToggleTheme, theme 
           </button>
         </OverlayTrigger>
       </div>
-
-      {/* View Group */}
-      <div className="view btn-group btn-group-sm">
-        <OverlayTrigger placement="bottom" overlay={<Tooltip>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</Tooltip>}>
+      
+      {/* Save/Share Group */}
+      <div className="save-share btn-group btn-group-sm">
+      <OverlayTrigger placement="bottom" overlay={<Tooltip>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</Tooltip>}>
           <button className={buttonClass} onClick={onToggleTheme} style={buttonStyle}>
             <i className={`bi ${theme === 'dark' ? 'bi-sun-fill' : 'bi-moon-stars-fill'}`}></i>
           </button>
         </OverlayTrigger>
-        <OverlayTrigger placement="bottom" overlay={<Tooltip>Fullscreen</Tooltip>}>
-          <button className={buttonClass} onClick={() => {}} style={buttonStyle}>
-            <i className="bi bi-arrows-angle-expand"></i>
-          </button>
-        </OverlayTrigger>
-      </div>
-
-      {/* Save/Share Group */}
-      <div className="save-share btn-group btn-group-sm">
         <OverlayTrigger placement="bottom" overlay={<Tooltip>Export File</Tooltip>}>
           <button className={buttonClass} onClick={() => {}} style={buttonStyle}>
             <i className="bi bi-file-earmark-arrow-up"></i>

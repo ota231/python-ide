@@ -13,7 +13,7 @@ export function TerminalSidebar({ theme, activeMode, onToggleMode }: TerminalSid
         placement="right"
         overlay={
           <Tooltip>
-            {activeMode === 'output' ? 'Switch to Terminal' : 'Switch to Output'}
+            {activeMode === 'output' ? 'Interactive Mode' : 'Switch to Output'}
           </Tooltip>
         }
       >

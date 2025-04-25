@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Toolbar } from "./components/Toolbar";
-import { MonacoEditor } from "./components/Editor";
+import { AceCodeEditor } from "./components/Editor";
 import { TerminalSection } from "./components/TerminalSection";
 import { FilePane } from "./components/FilePane";
 import { PythonRunner } from './hooks/PythonRunner';
@@ -72,7 +72,7 @@ export default function App() {
           </div>
 
           <div className="flex-grow-1 h-100 overflow-hidden">
-            <MonacoEditor 
+            <AceCodeEditor 
               code={code} 
               onChange={(newCode) => setCode(newCode || '')} 
               theme={theme}
