@@ -22,28 +22,28 @@ print(my_seq)`;
 export default function App() {
   // File system state
   const [allFiles, setAllFiles] = useState<FileItem[]>([
-    { 
-      id: '1', 
-      name: 'main.py', 
+    {
+      id: '1',
+      name: 'main.py',
       type: 'file',
       language: 'python',
       content: DEFAULT_CODE
     },
-    { 
-      id: '2', 
-      name: 'utils.py', 
+    {
+      id: '2',
+      name: 'utils.py',
       type: 'file',
       language: 'python',
       content: '# Utility functions\n'
     },
-    { 
-      id: '3', 
-      name: 'examples', 
+    {
+      id: '3',
+      name: 'examples',
       type: 'folder',
       children: [
-        { 
-          id: '4', 
-          name: 'hello.py', 
+        {
+          id: '4',
+          name: 'hello.py',
           type: 'file',
           language: 'python',
           content: 'print("Hello World!")'
@@ -68,10 +68,10 @@ export default function App() {
 
   // Update file content when editor changes
   const handleCodeChange = (newCode: string) => {
-    setAllFiles(allFiles.map(f => 
+    setAllFiles(allFiles.map(f =>
       f.id === activeFileId ? { ...f, content: newCode } : f
     ));
-    setOpenFiles(openFiles.map(f => 
+    setOpenFiles(openFiles.map(f =>
       f.id === activeFileId ? { ...f, content: newCode } : f
     ));
   };
@@ -117,10 +117,10 @@ export default function App() {
   return (
     <div className="app d-flex flex-column vh-100">
       <div className="bg-light border">
-        <Toolbar 
-          onRun={handleRun} 
-          onReset={handleReset} 
-          onClear={handleClear} 
+        <Toolbar
+          onRun={handleRun}
+          onReset={handleReset}
+          onClear={handleClear}
           onCopy={handleCopy}
           onToggleTheme={handleThemeChange}
           theme={theme}
@@ -131,20 +131,19 @@ export default function App() {
         {/* Tabs */}
         <div className="d-flex border-bottom bg-light">
           {openFiles.map(file => (
-            <div 
+            <div
               key={file.id}
-              className={`tab-item px-3 py-2 ${
-                activeFileId === file.id ? 'active bg-white' : ''
-              }`}
+              className={`tab-item px-3 py-2 ${activeFileId === file.id ? 'active bg-white' : ''
+                }`}
               onClick={() => setActiveFileId(file.id)}
-              style={{ 
+              style={{
                 cursor: 'pointer',
                 borderRight: '1px solid #dee2e6'
               }}
             >
               {file.name}
               {openFiles.length > 1 && (
-                <button 
+                <button
                   className="ms-2 btn-close"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -162,34 +161,33 @@ export default function App() {
         </div>
 
         <div className="d-flex flex-grow-1 overflow-hidden">
-          <div 
+          <div
             className="h-100 overflow-auto border"
-            style={{ 
+            style={{
               width: '250px',
               minWidth: '250px',
             }}
           >
-            <FilePane 
-              allFiles={allFiles}
+            <FilePane
               openFiles={openFiles}
               setOpenFiles={setOpenFiles}
-              setAllFiles={setAllFiles}
               activeFileId={activeFileId}
               setActiveFileId={setActiveFileId}
+              theme={theme}  // Don't forget to pass the theme prop
             />
           </div>
 
           <div className="flex-grow-1 h-100 overflow-hidden">
-            <AceCodeEditor 
-              code={activeFile?.content || ''} 
-              onChange={handleCodeChange} 
+            <AceCodeEditor
+              code={activeFile?.content || ''}
+              onChange={handleCodeChange}
               theme={theme}
               language={activeFile?.language}
             />
           </div>
         </div>
 
-        <div 
+        <div
           className="border"
           style={{
             height: '50%',
@@ -198,10 +196,10 @@ export default function App() {
             borderColor: '#444 !important'
           }}
         >
-          <TerminalSection 
-            output={result.output} 
-            error={result.error} 
-            isRunning={status === 'loading'} 
+          <TerminalSection
+            output={result.output}
+            error={result.error}
+            isRunning={status === 'loading'}
             theme={theme}
             activeMode={activeMode}
             onToggleMode={toggleMode}

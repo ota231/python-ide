@@ -84,7 +84,7 @@ export function FilePane({
   return (
     <div className={`file-pane h-100 p-2 ${bgColor} ${textColor}`} style={{ width: '220px' }}>
       <div className={`d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom ${borderColor}`}>
-        <h6 className="m-0">OPEN FILES</h6>
+        <h6 className="m-0">FILES</h6>
         <div>
           <label className={`btn btn-sm btn-${buttonVariant} me-1`} title="Import File">
             <i className="bi bi-file-earmark-arrow-down"></i>
