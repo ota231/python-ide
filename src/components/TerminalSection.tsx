@@ -2,20 +2,19 @@ import { CodeOutput } from './CodeOutput';
 import { TerminalTabs } from './TerminalTabs';
 import { InteractiveTerminal } from './InteractiveTerminal';
 import {useState} from 'react';
-import { FileOutputViewer } from './FileOutputViewer';
+import { PlotOutputViewer } from './PlotOutputViewer';
 
 interface TerminalSectionProps {
   output: string;
   error: string;
   isRunning: boolean;
   theme: 'light' | 'dark';
-  activeMode: 'output' | 'terminal';
-  onToggleMode: () => void;
+  plotUrl?: string; // URL or base64 encoded image
 }
 
-export function TerminalSection({ output, error, isRunning, theme }: TerminalSectionProps) {
-  const [activeTab, setActiveTab] = useState<'output' | 'file-output' | 'terminal'>('output');
-  const hasFileOutput = /* determine if file output exists */ false;
+export function TerminalSection({ output, error, isRunning, theme, plotUrl }: TerminalSectionProps) {
+  const [activeTab, setActiveTab] = useState<'output' | 'plot' | 'terminal'>('output');
+
   return (
     <div className="terminal-section d-flex h-100">
       <div className="d-flex flex-column flex-grow-1 h-100">
@@ -23,7 +22,7 @@ export function TerminalSection({ output, error, isRunning, theme }: TerminalSec
           theme={theme}
           activeTab={activeTab}
           onTabChange={setActiveTab}
-          hasFileOutput={hasFileOutput}
+          plotUrl={plotUrl}
         />
         
         {activeTab === 'output' && (
@@ -35,11 +34,8 @@ export function TerminalSection({ output, error, isRunning, theme }: TerminalSec
           />
         )}
         
-        {activeTab === 'file-output' && (
-          <FileOutputViewer 
-            /* pass necessary file output props */
-            theme={theme}
-          />
+        {activeTab === 'plot' && plotUrl && (
+          <PlotOutputViewer plotUrl={plotUrl} theme={theme} />
         )}
         
         {activeTab === 'terminal' && (

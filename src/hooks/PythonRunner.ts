@@ -82,7 +82,6 @@ export function PythonRunner() {
 
     setResult({ output: 'Running...', error: '' });
 
-    // Replace `input()` in Python with `js_input()`
     const inputWrapper = `
 import builtins
 builtins.input = js_input

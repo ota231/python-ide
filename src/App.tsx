@@ -28,27 +28,6 @@ export default function App() {
       type: 'file',
       language: 'python',
       content: DEFAULT_CODE
-    },
-    {
-      id: '2',
-      name: 'utils.py',
-      type: 'file',
-      language: 'python',
-      content: '# Utility functions\n'
-    },
-    {
-      id: '3',
-      name: 'examples',
-      type: 'folder',
-      children: [
-        {
-          id: '4',
-          name: 'hello.py',
-          type: 'file',
-          language: 'python',
-          content: 'print("Hello World!")'
-        }
-      ]
     }
   ]);
 
@@ -61,7 +40,6 @@ export default function App() {
   // Other existing state
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const { runPython, result, status } = PythonRunner();
-  const [activeMode, setActiveMode] = useState<'output' | 'terminal'>('output');
 
   // Get active file
   const activeFile = openFiles.find(f => f.id === activeFileId) || openFiles[0];
@@ -74,11 +52,6 @@ export default function App() {
     setOpenFiles(openFiles.map(f =>
       f.id === activeFileId ? { ...f, content: newCode } : f
     ));
-  };
-
-  // Existing handlers
-  const toggleMode = () => {
-    setActiveMode(prev => prev === 'output' ? 'terminal' : 'output');
   };
 
   const handleRun = () => {
@@ -203,8 +176,6 @@ export default function App() {
             error={result.error}
             isRunning={status === 'loading'}
             theme={theme}
-            activeMode={activeMode}
-            onToggleMode={toggleMode}
           />
         </div>
       </div>

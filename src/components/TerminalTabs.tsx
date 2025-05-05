@@ -2,16 +2,16 @@ import './terminal-tabs.css';
 
 type TerminalTabsProps = {
   theme: 'light' | 'dark';
-  activeTab: 'output' | 'file-output' | 'terminal';
-  onTabChange: (tab: 'output' | 'file-output' | 'terminal') => void;
-  hasFileOutput: boolean;
+  activeTab: 'output' | 'plot' | 'terminal';
+  onTabChange: (tab: 'output' | 'plot' | 'terminal') => void;
+  plotUrl?: string;  // URL or base64 encoded image
 };
 
 export function TerminalTabs({ 
   theme, 
   activeTab, 
   onTabChange,
-  hasFileOutput 
+  plotUrl 
 }: TerminalTabsProps) {
   return (
     <div className={`terminal-tabs ${theme}`}>
@@ -20,22 +20,22 @@ export function TerminalTabs({
           className={activeTab === 'output' ? 'active' : ''}
           onClick={() => onTabChange('output')}
         >
-          OUTPUT
+          Output
         </button>
         
         <button
-          className={activeTab === 'file-output' ? 'active' : ''}
-          onClick={() => onTabChange('file-output')}
-          disabled={!hasFileOutput}
+          className={activeTab === 'plot' ? 'active' : ''}
+          onClick={() => onTabChange('plot')}
+          disabled={!plotUrl}
         >
-          FILE OUTPUT
+          Image Output
         </button>
         
         <button
           className={activeTab === 'terminal' ? 'active' : ''}
           onClick={() => onTabChange('terminal')}
         >
-          TERMINAL
+          Terminal
         </button>
       </div>
     </div>
