@@ -26,6 +26,7 @@ export function TerminalTabs({ plotUrl, theme }: TerminalTabsProps) {
         >
           Image Output
         </button>
+        
       </div>
 
     </div>

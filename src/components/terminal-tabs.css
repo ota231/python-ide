@@ -16,16 +16,18 @@
 
 .terminal-tabs.light .tab-buttons button {
   color: #222;
+  background-color: #e0e0e0;
 }
 
 .terminal-tabs.dark .tab-buttons button {
   color: #eee;
+  background-color: #444;
 }
 
 .terminal-tabs.light .tab-buttons button.active {
-  background-color: #e0e0e0;
+  background-color: transparent;
 }
 
 .terminal-tabs.dark .tab-buttons button.active {
-  background-color: #444;
+  background-color: transparent;
 }
