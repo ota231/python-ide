@@ -1,7 +1,8 @@
 import { CodeOutput } from './CodeOutput';
 import { TerminalTabs } from './TerminalTabs';
-import { TerminalSidebar } from './TerminalSidebar';
 import { InteractiveTerminal } from './InteractiveTerminal';
+import {useState} from 'react';
+import { FileOutputViewer } from './FileOutputViewer';
 
 interface TerminalSectionProps {
   output: string;
@@ -12,31 +13,36 @@ interface TerminalSectionProps {
   onToggleMode: () => void;
 }
 
-export function TerminalSection({ output, error, isRunning, theme, activeMode, onToggleMode }: TerminalSectionProps) {
+export function TerminalSection({ output, error, isRunning, theme }: TerminalSectionProps) {
+  const [activeTab, setActiveTab] = useState<'output' | 'file-output' | 'terminal'>('output');
+  const hasFileOutput = /* determine if file output exists */ false;
   return (
     <div className="terminal-section d-flex h-100">
-      <TerminalSidebar 
-        theme={theme} 
-        activeMode={activeMode}
-        onToggleMode={onToggleMode}
-      />
-      
       <div className="d-flex flex-column flex-grow-1 h-100">
-        {activeMode === 'output' && (
-          <TerminalTabs 
-            outputLines={output.split('\n').filter(Boolean)} 
-            theme={theme} 
-          />
-        )}
+        <TerminalTabs 
+          theme={theme}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          hasFileOutput={hasFileOutput}
+        />
         
-        {activeMode === 'output' ? (
+        {activeTab === 'output' && (
           <CodeOutput 
             output={output} 
             error={error} 
             isLoading={isRunning}  
             theme={theme}
           />
-        ) : (
+        )}
+        
+        {activeTab === 'file-output' && (
+          <FileOutputViewer 
+            /* pass necessary file output props */
+            theme={theme}
+          />
+        )}
+        
+        {activeTab === 'terminal' && (
           <InteractiveTerminal theme={theme} />
         )}
       </div>

@@ -1,34 +1,43 @@
-import { useState } from 'react';
 import './terminal-tabs.css';
 
 type TerminalTabsProps = {
-  outputLines: string[];
-  plotUrl?: string;
   theme: 'light' | 'dark';
+  activeTab: 'output' | 'file-output' | 'terminal';
+  onTabChange: (tab: 'output' | 'file-output' | 'terminal') => void;
+  hasFileOutput: boolean;
 };
 
-export function TerminalTabs({ plotUrl, theme }: TerminalTabsProps) {
-  const [activeTab, setActiveTab] = useState<'code' | 'plot'>('code');
-
+export function TerminalTabs({ 
+  theme, 
+  activeTab, 
+  onTabChange,
+  hasFileOutput 
+}: TerminalTabsProps) {
   return (
     <div className={`terminal-tabs ${theme}`}>
       <div className="tab-buttons">
         <button
-          className={activeTab === 'code' ? 'active' : ''}
-          onClick={() => setActiveTab('code')}
+          className={activeTab === 'output' ? 'active' : ''}
+          onClick={() => onTabChange('output')}
         >
-          Code Output
-        </button>
-        <button
-          className={activeTab === 'plot' ? 'active' : ''}
-          onClick={() => setActiveTab('plot')}
-          disabled={!plotUrl}
-        >
-          Image Output
+          OUTPUT
         </button>
         
+        <button
+          className={activeTab === 'file-output' ? 'active' : ''}
+          onClick={() => onTabChange('file-output')}
+          disabled={!hasFileOutput}
+        >
+          FILE OUTPUT
+        </button>
+        
+        <button
+          className={activeTab === 'terminal' ? 'active' : ''}
+          onClick={() => onTabChange('terminal')}
+        >
+          TERMINAL
+        </button>
       </div>
-
     </div>
   );
 }

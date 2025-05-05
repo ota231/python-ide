@@ -1,6 +1,8 @@
 .tab-buttons {
   display: flex;
   gap: 0.5rem;
+  font-size: 14px;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 .tab-buttons button {
@@ -30,4 +32,20 @@
 
 .terminal-tabs.dark .tab-buttons button.active {
   background-color: transparent;
+}
+
+.tab-buttons {
+  padding: 0.5rem;
+}
+
+.mode-toggle {
+  margin-left: auto;
+  font-style: italic;
+}
+
+.tab-buttons button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  text-decoration: none;
+  font-weight: normal;
 }
