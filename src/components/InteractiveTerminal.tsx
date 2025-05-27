@@ -7,6 +7,7 @@ interface InteractiveTerminalProps {
 export function InteractiveTerminal({ theme }: InteractiveTerminalProps) {
   useEffect(() => {
     // Create the script element
+    // TODO: add scrollability, resizability, other modules?
     const script = document.createElement('script');
     script.id = 'interactive_mode';
     script.type = 'mpy';

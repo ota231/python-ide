@@ -14,7 +14,7 @@ declare global {
 }
 
 interface PyodideInterface {
-  runPythonAsync: <T = unknown>(code: string) => Promise<T>;
+  runPythonAsync: <T = unknown>(code: string, options?: {signal?: AbortSignal}) => Promise<T>;
   loadPackage: (packages: string | string[]) => Promise<void>;
   setStdout: (options: { batched?: (text: string) => void }) => void;
   setStderr: (options: { batched?: (text: string) => void }) => void;

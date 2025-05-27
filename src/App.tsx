@@ -39,7 +39,7 @@ export default function App() {
 
   // Other existing state
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  const { runPython, result, status } = PythonRunner();
+  const {runPython, result, status} = PythonRunner();
 
   // Get active file
   const activeFile = openFiles.find(f => f.id === activeFileId) || openFiles[0];
@@ -66,6 +66,10 @@ export default function App() {
       handleCodeChange(DEFAULT_CODE);
     }
   };
+
+  const handleStop = () => {
+    //
+  }
 
   const handleClear = () => {
     handleCodeChange('');
@@ -96,6 +100,7 @@ export default function App() {
           onClear={handleClear}
           onCopy={handleCopy}
           onToggleTheme={handleThemeChange}
+          onStop={handleStop}
           theme={theme}
         />
       </div>

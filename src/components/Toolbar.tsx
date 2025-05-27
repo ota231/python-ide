@@ -7,10 +7,11 @@ interface ToolbarProps {
   onClear: () => void;
   onCopy: () => void;
   onToggleTheme: () => void;
+  onStop: () => void;
   theme?: 'light' | 'dark';
 }
 
-export function Toolbar({ onRun, onReset, onClear, onCopy, onToggleTheme, theme = 'light' }: ToolbarProps) {
+export function Toolbar({ onRun, onReset, onClear, onCopy, onToggleTheme, onStop, theme = 'light' }: ToolbarProps) {
   const buttonClass = `btn btn-sm ${theme === 'dark' ? 'btn-outline-light' : 'btn-outline-dark'} mx-1`;
   const buttonStyle = { width: '36px', height: '36px' };
 
@@ -24,7 +25,7 @@ export function Toolbar({ onRun, onReset, onClear, onCopy, onToggleTheme, theme 
           </button>
         </OverlayTrigger>
         <OverlayTrigger placement="bottom" overlay={<Tooltip>Stop</Tooltip>}>
-          <button className={buttonClass} onClick={() => {}} style={buttonStyle}>
+          <button className={buttonClass} onClick={onStop} style={buttonStyle}>
             <i className="bi bi-stop-fill"></i>
           </button>
         </OverlayTrigger>
