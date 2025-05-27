@@ -29,8 +29,12 @@ export function InteractiveTerminal({ theme }: InteractiveTerminalProps) {
   }, []);
 
   return (
-    <div className={`interactive-terminal h-100 ${theme === 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
-      <div id="interactive-mode" />
-    </div>
+    <div 
+      className={`interactive-terminal h-100 ${theme === 'dark' ? 'bg-dark text-light' : 'bg-light text-dark'}`}
+      style={{
+        overflow: 'auto', // This enables scrolling
+      }}
+      id="interactive-mode" 
+    />
   );
 }
