@@ -59,7 +59,6 @@ export function CodeOutput({ output, error, isLoading, theme }: CodeOutputProps)
 
         if (isLoading) {
             term.writeln('Loading Python runtime...');
-            console.log("loading terminal")
         } else if (error) {
             term.writeln(`\x1b[31m❌ ${error}\x1b[0m`); // red text
         } else {
